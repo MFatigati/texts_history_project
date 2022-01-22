@@ -4,7 +4,7 @@ const DBQUERY = require('./lib/dbQuery')
 
 const app = express();
 const host = "localhost";
-const port = 3000;
+const port = 3001;
 
 SQL = "SELECT * FROM texts";
 
@@ -15,6 +15,20 @@ app.get("/test", (req, res) => {
 });
 
 app.get("/database", (req, res, next) => {
+  console.log('test');
+  DBQUERY.connectToDB()
+    .then((data) => { return DBQUERY.getResult(SQL, data)})
+    .then((data) => { return DBQUERY.disconnectFromDB(data)})
+    .then((data) => {
+      console.log(data.result.rows);
+      res.json(data.result.rows);
+      return data;
+    })
+    .catch(err => console.log(err))
+})
+
+app.get("/texts", (req, res, next) => {
+  console.log('getting texts');
   DBQUERY.connectToDB()
     .then((data) => { return DBQUERY.getResult(SQL, data)})
     .then((data) => { return DBQUERY.disconnectFromDB(data)})
