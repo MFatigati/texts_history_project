@@ -5,6 +5,8 @@
  * enable ability to add to select lists
  */
 
+import DBQUERY from '../../lib/dbQuery.js'
+
 
 document.addEventListener('DOMContentLoaded', () => {
     let textsSelect = document.getElementById('texts-list');
@@ -18,5 +20,16 @@ document.addEventListener('DOMContentLoaded', () => {
     getAllTexts.addEventListener('load', () => {
         
     })
+
+    DBQUERY.connectToDB()
+    .then((data) => { return DBQUERY.getResult(SQL, data)})
+    .then((data) => { return DBQUERY.disconnectFromDB(data)})
+    .then((data) => {
+      console.log(data.result.rows);
+      res.json(data.result.rows);
+      return data;
+    })
+    .catch(err => console.log(err))
     getAllTexts.send();
+
 })
